@@ -1,4 +1,6 @@
 ---
+export const prerender = true
+
 import Layout from '../../layouts/Layout.astro'
 import { getCollection, render, type CollectionEntry } from 'astro:content'
 
@@ -37,10 +39,37 @@ const fmt = (d: Date) =>
       </div>
       <h1>{post.data.title}</h1>
       {post.data.subtitle && <p class="subtitle">{post.data.subtitle}</p>}
+
+      <div class="share-actions">
+        <a
+          class="share-btn"
+          id="share-btn"
+          href={`/api/linkedin/start?slug=${post.id}`}
+        >
+          share on linkedin →
+        </a>
+        <span class="share-state" id="share-state"></span>
+      </div>
     </header>
 
     <div class="prose">
       <Content />
     </div>
   </article>
+
+  <script is:inline>
+    (() => {
+      const params = new URLSearchParams(window.location.search)
+      const btn = document.getElementById('share-btn')
+      const state = document.getElementById('share-state')
+      if (params.has('shared') && btn && state) {
+        btn.style.display = 'none'
+        state.textContent = '✓ shared to linkedin'
+        state.className = 'share-state shared'
+      } else if (params.has('li_error') && state) {
+        state.textContent = 'share failed: ' + (params.get('li_error') || 'unknown')
+        state.className = 'share-state error'
+      }
+    })()
+  </script>
 </Layout>
