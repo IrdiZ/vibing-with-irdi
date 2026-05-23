@@ -67,5 +67,5 @@ vercel              # follow prompts
 vercel --prod       # ship to production
 ```
 
-Or connect the GitHub repo via the Vercel web UI — Astro is auto-detected,
+Or connect the GitHub repo via the Vercel web UI. Astro is auto-detected,
 defaults work out of the box.

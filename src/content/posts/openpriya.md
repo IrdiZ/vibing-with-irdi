@@ -1,6 +1,6 @@
 ---
 title: openpriya
-subtitle: how we taught a real-time STT model to spell proper names — without retraining it.
+subtitle: how we taught a real-time STT model to spell proper names without retraining it.
 date: 2026-05-24
 excerpt: OpenAI's gpt-realtime-whisper kept fusing "open priya" into "openpriya". We couldn't pass a vocabulary to the model, so we built one client-side. Here's how that engine works and why hardcoding rules was the wrong move.
 tags: [stt, vocab, engine, ml]
@@ -9,7 +9,7 @@ ogImage: /og-openpriya.png
 
 So here's the problem.
 
-We're building Zyren — a voice-driven radiology reporting tool. A doctor sits down, hits a mic button, says **open priya**, and the case for Priya Nambiar opens up. The kind of thing you'd assume just works in 2026.
+We're building Zyren, a voice-driven radiology reporting tool. A doctor sits down, hits a mic button, says **open priya**, and the case for Priya Nambiar opens up. The kind of thing you'd assume just works in 2026.
 
 It does not.
 
@@ -89,7 +89,7 @@ The vocab is the dictionary. Adding a new vocab item (a new patient, a new butto
 
 ### 2. prefix-containment in the similarity score
 
-For morphology — `signed → sign`, `opening → open`, `pri → priya` — I added exactly one branch to the composite-similarity function:
+For morphology (`signed → sign`, `opening → open`, `pri → priya`), I added exactly one branch to the composite-similarity function:
 
 ```ts
 function compositeScore(query: string, candidate: string): number {
@@ -109,8 +109,8 @@ function compositeScore(query: string, candidate: string): number {
 ### 3. beam search with intent disambiguation
 
 The hardest case: *"finding marcus"*. The vocab has both:
-- `findings` — a section title in the active template (weight-boosted to 1.18)
-- `find` — a command verb (weight 1.0)
+- `findings`: a section title in the active template (weight-boosted to 1.18)
+- `find`: a command verb (weight 1.0)
 
 A greedy per-token matcher picks `findings`. The rewrite becomes `findings marcus`, which still classifies as a finding. Nothing happens.
 
@@ -138,11 +138,11 @@ I wrote a property-based test that takes real radiology dictation strings, rando
 
 ## three tiers
 
-The local engine catches ~90% of real failures. For the rest, two more layers fire on commit — outside the per-delta hot path, so they get to be slower.
+The local engine catches ~90% of real failures. For the rest, two more layers fire on commit, outside the per-delta hot path, so they get to be slower.
 
-**Warm path** — OpenAI's `text-embedding-3-small` against pre-cached intent templates. Catches paraphrases the local engine can't reach phonetically: *"give me marcus"* ≈ *"open marcus"*, *"I'm done with this one"* ≈ *"sign it"*. One embed call per utterance, ~200ms. Cheap.
+**Warm path**: OpenAI's `text-embedding-3-small` against pre-cached intent templates. Catches paraphrases the local engine can't reach phonetically: *"give me marcus"* ≈ *"open marcus"*, *"I'm done with this one"* ≈ *"sign it"*. One embed call per utterance, ~200ms. Cheap.
 
-**Cold path** — `gpt-4o-mini` as a fallback for anything the warm path can't resolve. Already existed. The improvement: the prompt now includes the current vocab as context, so the model sees *"Patient names: Marcus, Priya, Lin, …"* and *"Commands: sign, generate, next, …"* and routes accordingly. Same model, way better behaviour.
+**Cold path**: `gpt-4o-mini` as a fallback for anything the warm path can't resolve. Already existed. The improvement: the prompt now includes the current vocab as context, so the model sees *"Patient names: Marcus, Priya, Lin, …"* and *"Commands: sign, generate, next, …"* and routes accordingly. Same model, way better behaviour.
 
 ## the numbers
 
@@ -161,7 +161,7 @@ Group 6: navigation under clean vocab          ✓
 Total: 273 passed, 0 failed
 ```
 
-~1ms per chunk in the hot path. Zero false rewrites on dictated findings. Past tense, fused commands, phonetic typos, paraphrases — all resolved.
+~1ms per chunk in the hot path. Zero false rewrites on dictated findings. Past tense, fused commands, phonetic typos, paraphrases. All resolved.
 
 ## the lesson
 
@@ -173,4 +173,4 @@ This is the lesson I keep relearning: **make the data speak for itself, then bui
 
 The Zyren commit is [magdyf/Zyren@826d507](https://github.com/magdyf/Zyren/commit/826d507) if you want to see the wiring.
 
-— irdi
+irdi
