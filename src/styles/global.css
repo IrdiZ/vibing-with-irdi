@@ -97,6 +97,66 @@ a:hover { text-decoration: underline; text-underline-offset: 4px; }
   max-width: 560px;
 }
 
+/* author / about card. Sits between the hero and the posts list so first-
+   time visitors immediately know the vibe-coding angle before they read. */
+.about-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 28px 32px;
+  margin-bottom: 88px;
+  background: linear-gradient(180deg, rgba(184, 255, 0, 0.04), transparent 70%), var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  position: relative;
+}
+.about-tag {
+  position: absolute;
+  top: -8px;
+  left: 24px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg);
+  padding: 0 8px;
+}
+.about-photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--border-strong);
+  flex-shrink: 0;
+}
+.about-content {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-dim);
+  flex: 1;
+  min-width: 0;
+}
+.about-content strong {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.about-content p + p { margin-top: 10px; }
+@media (max-width: 640px) {
+  .about-card {
+    flex-direction: column;
+    gap: 16px;
+    padding: 22px 22px 24px;
+    margin-bottom: 64px;
+  }
+  .about-photo { width: 72px; height: 72px; }
+}
+
 /* post list */
 .posts h2 {
   font-family: var(--font-display);
