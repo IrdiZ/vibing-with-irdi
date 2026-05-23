@@ -171,6 +171,4 @@ The vocab-driven approach is harder to *write* but trivial to *extend*. New butt
 
 This is the lesson I keep relearning: **make the data speak for itself, then build a small engine around it**. Stop writing rules.
 
-The Zyren commit is [magdyf/Zyren@826d507](https://github.com/magdyf/Zyren/commit/826d507) if you want to see the wiring.
-
 irdi
