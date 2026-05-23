@@ -36,27 +36,38 @@ export type ViralCaptionInput = {
   url: string
 }
 
+// Fallback when Claude isn't configured or its call fails — keeps the
+// share button functional, just with a less interesting caption.
+export function fallbackCaption(input: ViralCaptionInput): string {
+  return `${input.title}\n\n${input.excerpt}\n\n${input.url}`
+}
+
 export async function generateViralCaption(input: ViralCaptionInput): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) throw new Error('Missing env: ANTHROPIC_API_KEY')
+  if (!apiKey) return fallbackCaption(input)
   const client = new Anthropic({ apiKey })
   const userMessage =
     `Article title: ${input.title}\n\n` +
     `Article excerpt: ${input.excerpt}\n\n` +
     `Article URL: ${input.url}\n\n` +
     `Article body (markdown):\n\n${input.bodyMarkdown}`
-  const res = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 600,
-    temperature: 0.7,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: userMessage }],
-  })
-  // Concatenate all text blocks. Strip any stray em dashes Claude slipped in.
-  const text = res.content
-    .filter((b): b is Anthropic.TextBlock => b.type === 'text')
-    .map((b) => b.text)
-    .join('\n')
-    .trim()
-  return text.replace(/—/g, ',')
+  try {
+    const res = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 600,
+      temperature: 0.7,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: userMessage }],
+    })
+    // Concatenate all text blocks. Strip any stray em dashes Claude slipped in.
+    const text = res.content
+      .filter((b): b is Anthropic.TextBlock => b.type === 'text')
+      .map((b) => b.text)
+      .join('\n')
+      .trim()
+    return text ? text.replace(/—/g, ',') : fallbackCaption(input)
+  } catch (e) {
+    console.warn('[caption] Claude failed, using fallback:', e)
+    return fallbackCaption(input)
+  }
 }
