@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #f5f5f5;
+    background:
+      radial-gradient(ellipse at 80% 0%, rgba(184, 255, 0, 0.2), transparent 55%),
+      radial-gradient(ellipse at 20% 100%, rgba(255, 46, 99, 0.12), transparent 50%),
+      #0a0a0a;
+    padding: 80px;
+    position: relative;
+  }
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .dot {
+    width: 16px; height: 16px;
+    background: #b8ff00;
+    border-radius: 3px;
+    box-shadow: 0 0 24px #b8ff00;
+  }
+  .brand {
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: #a3a3a3;
+  }
+  .label {
+    position: relative;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6e6e6e;
+    margin-bottom: 32px;
+  }
+  .label .accent { color: #b8ff00; }
+  h1 {
+    position: relative;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 124px;
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin-bottom: 28px;
+  }
+  .arrow {
+    position: relative;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 56px;
+    color: #b8ff00;
+    line-height: 1;
+    margin: 12px 0 28px 0;
+  }
+  h2 {
+    position: relative;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 64px;
+    font-weight: 500;
+    color: #f5f5f5;
+    letter-spacing: -0.03em;
+    margin-bottom: 36px;
+  }
+  h2 .a { color: #b8ff00; }
+  .tagline {
+    position: relative;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: #d0d0d0;
+    letter-spacing: -0.01em;
+    max-width: 880px;
+  }
+  .bottom {
+    position: absolute;
+    bottom: 60px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    color: #6e6e6e;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .tag {
+    border: 1px solid rgba(255,255,255,0.18);
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: #a3a3a3;
+  }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="top">
+    <div class="dot"></div>
+    <div class="brand">vibing with irdi</div>
+  </div>
+  <div class="label">post · <span class="accent">2026-05-24</span></div>
+  <h1>openpriya</h1>
+  <div class="arrow">↓</div>
+  <h2>open <span class="a">priya</span></h2>
+  <p class="tagline">how we taught a real-time STT model to spell proper names — without retraining it.</p>
+  <div class="bottom">
+    <span>vibing-with-irdi.vercel.app</span>
+    <span class="tag">stt · vocab · ml</span>
+  </div>
+</body>
+</html>

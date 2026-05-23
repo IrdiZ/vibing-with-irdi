@@ -1,0 +1,79 @@
+---
+import '../styles/global.css'
+
+export interface Props {
+  title: string
+  description: string
+  ogImage?: string
+  // 'website' for the homepage, 'article' for posts. LinkedIn / Twitter
+  // use this to render the right card type.
+  ogType?: 'website' | 'article'
+  publishedTime?: string
+}
+
+const { title, description, ogImage, ogType = 'website', publishedTime } = Astro.props
+
+const site = Astro.site ?? new URL('https://vibing-with-irdi.vercel.app')
+const canonical = new URL(Astro.url.pathname, site).toString()
+const og = new URL(ogImage ?? '/og-default.png', site).toString()
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph — LinkedIn, Slack, Discord, Facebook all read these -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:site_name" content="vibing with irdi" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+
+    <!-- Twitter / X — same image, large summary card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={og} />
+
+    <!-- Fonts: Space Grotesk (display), Inter (body), JetBrains Mono (code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+  </head>
+  <body>
+    <div class="shell">
+      <nav class="nav">
+        <a href="/" class="brand">
+          <span class="brand-dot"></span>
+          vibing with irdi
+        </a>
+        <div class="nav-links">
+          <a href="/">posts</a>
+          <a href="https://github.com/IrdiZ" target="_blank" rel="noopener">github</a>
+        </div>
+      </nav>
+
+      <slot />
+
+      <footer class="footer">
+        <span>vibing with irdi · {new Date().getFullYear()}</span>
+        <span>engineering, mostly. vibes always.</span>
+      </footer>
+    </div>
+  </body>
+</html>

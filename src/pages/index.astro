@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+)
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+---
+
+<Layout
+  title="vibing with irdi"
+  description="engineering, mostly. vibes always. notes on shipping stuff and the occasional W."
+>
+  <section class="hero">
+    <h1>
+      vibing<br />
+      with <span class="accent">irdi</span>
+    </h1>
+    <p>engineering, mostly. vibes, always. notes from shipping stuff that ends up working.</p>
+  </section>
+
+  <section class="posts">
+    <h2>{posts.length} {posts.length === 1 ? 'post' : 'posts'}</h2>
+    {
+      posts.map((post) => (
+        <a class="post-card" href={`/posts/${post.id}`}>
+          <div class="meta">
+            <span class="dot"></span>
+            <span>{fmt(post.data.date)}</span>
+          </div>
+          <h3>{post.data.title}</h3>
+          <p class="excerpt">{post.data.excerpt}</p>
+          {post.data.tags.length > 0 && (
+            <div class="tags">
+              {post.data.tags.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </div>
+          )}
+        </a>
+      ))
+    }
+  </section>
+</Layout>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #f5f5f5;
+    background:
+      radial-gradient(ellipse at 50% -20%, rgba(184, 255, 0, 0.18), transparent 60%),
+      radial-gradient(ellipse at 110% 110%, rgba(255, 46, 99, 0.15), transparent 50%),
+      #0a0a0a;
+    padding: 80px;
+    position: relative;
+  }
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 60px;
+    position: relative;
+  }
+  .dot {
+    width: 22px; height: 22px;
+    background: #b8ff00;
+    border-radius: 4px;
+    box-shadow: 0 0 32px #b8ff00;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+  }
+  h1 {
+    position: relative;
+    font-size: 168px;
+    font-weight: 700;
+    line-height: 0.88;
+    letter-spacing: -0.06em;
+    margin-bottom: 32px;
+  }
+  h1 .a { color: #b8ff00; }
+  p {
+    position: relative;
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #a3a3a3;
+    letter-spacing: -0.01em;
+    max-width: 800px;
+  }
+  .bottom {
+    position: absolute;
+    bottom: 80px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    color: #6e6e6e;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .bottom .arrow { color: #b8ff00; }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="top">
+    <div class="dot"></div>
+    <div class="brand">vibing with irdi</div>
+  </div>
+  <h1>vibing<br />with <span class="a">irdi</span></h1>
+  <p>engineering, mostly. vibes, always.</p>
+  <div class="bottom">
+    <span>vibing-with-irdi.vercel.app</span>
+    <span class="arrow">→</span>
+  </div>
+</body>
+</html>
