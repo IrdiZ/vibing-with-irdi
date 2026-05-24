@@ -13,7 +13,7 @@ export interface Props {
 
 const { title, description, ogImage, ogType = 'website', publishedTime } = Astro.props
 
-const site = Astro.site ?? new URL('https://vibing-with-irdi.vercel.app')
+const site = Astro.site ?? new URL('https://irdizeneli.dev')
 const canonical = new URL(Astro.url.pathname, site).toString()
 const og = new URL(ogImage ?? '/og-default.png', site).toString()
 ---
