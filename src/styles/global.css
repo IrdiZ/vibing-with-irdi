@@ -255,6 +255,51 @@ a:hover { text-decoration: underline; text-underline-offset: 4px; }
   max-width: 640px;
 }
 
+/* Hearts + views in the post meta row. JS hydrates the numbers after
+   the static page loads — counts start as "—" then fill in. */
+.meta-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+.view-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: none;
+}
+.view-count svg { opacity: 0.7; }
+
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, transform 0.1s;
+}
+.like-btn:hover { color: var(--accent-hot); border-color: var(--accent-hot); }
+.like-btn:active { transform: scale(0.95); }
+.like-btn svg { transition: fill 0.15s, transform 0.2s; }
+.like-btn.liked { color: var(--accent-hot); border-color: var(--accent-hot); }
+.like-btn.liked svg { fill: var(--accent-hot); transform: scale(1.1); }
+
+@media (max-width: 640px) {
+  .meta-stats { width: 100%; margin-left: 0; justify-content: flex-end; margin-top: 6px; }
+}
+
 /* Share-on-LinkedIn admin button. Rendered on every post; the actual
    posting happens server-side via /api/linkedin/start → /callback. */
 .share-actions {

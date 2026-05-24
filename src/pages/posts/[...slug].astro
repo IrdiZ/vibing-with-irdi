@@ -36,6 +36,16 @@ const fmt = (d: Date) =>
             <span>{post.data.tags.join(' / ')}</span>
           </>
         )}
+        <span class="meta-stats" id="post-stats" data-slug={post.id}>
+          <span class="view-count" id="view-count" aria-label="views">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span id="view-num">—</span>
+          </span>
+          <button class="like-btn" id="like-btn" type="button" aria-label="Like this post">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span id="like-num">—</span>
+          </button>
+        </span>
       </div>
       <h1>{post.data.title}</h1>
       {post.data.subtitle && <p class="subtitle">{post.data.subtitle}</p>}
@@ -57,19 +67,82 @@ const fmt = (d: Date) =>
     </div>
   </article>
 
-  <script is:inline>
+  <script is:inline define:vars={{ slug: post.id }}>
     (() => {
+      // share button success / error banner
       const params = new URLSearchParams(window.location.search)
-      const btn = document.getElementById('share-btn')
-      const state = document.getElementById('share-state')
-      if (params.has('shared') && btn && state) {
-        btn.style.display = 'none'
-        state.textContent = '✓ shared to linkedin'
-        state.className = 'share-state shared'
-      } else if (params.has('li_error') && state) {
-        state.textContent = 'share failed: ' + (params.get('li_error') || 'unknown')
-        state.className = 'share-state error'
+      const shareBtn = document.getElementById('share-btn')
+      const shareState = document.getElementById('share-state')
+      if (params.has('shared') && shareBtn && shareState) {
+        shareBtn.style.display = 'none'
+        shareState.textContent = '✓ shared to linkedin'
+        shareState.className = 'share-state shared'
+      } else if (params.has('li_error') && shareState) {
+        shareState.textContent = 'share failed: ' + (params.get('li_error') || 'unknown')
+        shareState.className = 'share-state error'
       }
+
+      // stable per-browser uid for like/view dedupe (no auth needed)
+      function getUid() {
+        try {
+          let u = localStorage.getItem('vw_uid')
+          if (!u) {
+            u = (crypto.randomUUID && crypto.randomUUID()) ||
+                (Math.random().toString(36).slice(2) + Date.now().toString(36))
+            localStorage.setItem('vw_uid', u)
+          }
+          return u
+        } catch {
+          return null
+        }
+      }
+      const uid = getUid()
+      if (!uid) return
+
+      const likeBtn = document.getElementById('like-btn')
+      const likeNum = document.getElementById('like-num')
+      const viewNum = document.getElementById('view-num')
+
+      function fmt(n) {
+        if (n < 1000) return String(n)
+        if (n < 1_000_000) return (n / 1000).toFixed(n < 10_000 ? 1 : 0).replace(/\.0$/, '') + 'k'
+        return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'm'
+      }
+      function paint(s) {
+        if (s.likes != null && likeNum) likeNum.textContent = fmt(s.likes)
+        if (s.views != null && viewNum) viewNum.textContent = fmt(s.views)
+        if (s.liked != null && likeBtn) likeBtn.classList.toggle('liked', !!s.liked)
+      }
+
+      fetch(`/api/stats/${slug}?uid=${encodeURIComponent(uid)}`)
+        .then((r) => r.ok ? r.json() : null)
+        .then((d) => d && paint(d))
+        .catch(() => {})
+
+      fetch(`/api/view/${slug}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid }),
+      })
+        .then((r) => r.ok ? r.json() : null)
+        .then((d) => d && d.views != null && paint({ views: d.views }))
+        .catch(() => {})
+
+      likeBtn?.addEventListener('click', async () => {
+        // optimistic toggle for feel
+        likeBtn.classList.toggle('liked')
+        const res = await fetch(`/api/like/${slug}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid }),
+        }).catch(() => null)
+        if (!res || !res.ok) {
+          likeBtn.classList.toggle('liked') // revert
+          return
+        }
+        const d = await res.json()
+        paint(d)
+      })
     })()
   </script>
 </Layout>
