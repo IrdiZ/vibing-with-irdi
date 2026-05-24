@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import Analytics from '@vercel/analytics/astro'
 
 export interface Props {
   title: string
@@ -75,5 +76,6 @@ const og = new URL(ogImage ?? '/og-default.png', site).toString()
         <span>engineering, mostly. vibes always.</span>
       </footer>
     </div>
+    <Analytics />
   </body>
 </html>
